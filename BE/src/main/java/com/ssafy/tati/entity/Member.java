@@ -22,11 +22,11 @@ public class Member {
     private String img;
 
     //회원 이메일
-    @Column(name = "email", length = 50, nullable = false, unique = true)
+    @Column(name = "email", length = 50, nullable = false)
     private String email;
 
     //회원 비밀번호
-    @Column(name = "password", length = 70, nullable = false)
+    @Column(name = "password", length = 70, nullable = true)
     private String password;
 
     //회원 이름
@@ -34,7 +34,7 @@ public class Member {
     private String memberName;
 
     //회원 닉네임
-    @Column(name = "member_nick_name", length = 10, nullable = false, unique = true)
+    @Column(name = "member_nick_name", length = 10, nullable = false)
     private String memberNickName;
 
     //회원 총 열정 지수
@@ -52,6 +52,11 @@ public class Member {
     //회원 가입 날짜
     @Column(name = "created_date", updatable = false)
     private LocalDate createdDate;
+
+    @Column(nullable = false)
+    private String role; //권한
+    private String provider; //OAuth 종류
+    private String provideId; //OAuth id
 
     //가입한 스터디 목록
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)

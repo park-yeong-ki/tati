@@ -1,7 +1,6 @@
 package com.ssafy.tati.controller;
 
 import com.ssafy.tati.auth.JwtTokenizer;
-import com.ssafy.tati.auth.MemberDetails;
 import com.ssafy.tati.dto.req.EmailReqDto;
 import com.ssafy.tati.dto.req.MemberReqDto;
 import com.ssafy.tati.dto.res.GetMemberResDto;
@@ -13,7 +12,7 @@ import com.ssafy.tati.mapper.MemberMapper;
 import com.ssafy.tati.service.EmailService;
 import com.ssafy.tati.service.MemberService;
 import com.ssafy.tati.service.S3Service;
-import com.sun.mail.iap.ByteArray;
+import com.ssafy.tati.util.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,17 +20,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.List;
 
 @Tag(name = "회원가입과 로그인", description = "회원가입과 로그인 API 문서")
@@ -94,8 +89,8 @@ public class MemberController {
 
     @Operation(summary = "Access Token 재발급", description = "Refresh Token을 Header에 담아서 요청을 보내면 Header에 새로운 Access Token을 재발급")
     @GetMapping("/reissue")
-    public ResponseEntity<?> reissue(@AuthenticationPrincipal MemberDetails memberDetails) {
-        Member member = memberService.findVerifiedMember(memberDetails.getMember().getEmail());
+    public ResponseEntity<?> reissue() {
+        Member member = memberService.findById(SecurityUtil.getMemberId());
         Token token = jwtTokenizer.reissueAccessToken(member);
 
         HttpHeaders headers = new HttpHeaders();
@@ -123,9 +118,8 @@ public class MemberController {
 
     @Operation(summary = "로그아웃", description = "로그아웃을 통해 Refresh Token을 제거")
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(@AuthenticationPrincipal MemberDetails memberDetails,
-                                    @RequestHeader("Authorization") String bearerAtk) {
-        Member member = memberService.findVerifiedMember(memberDetails.getMember().getEmail());
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String bearerAtk) {
+        Member member = memberService.findById(SecurityUtil.getMemberId());
 
         jwtTokenizer.setBlackListAccessToken(bearerAtk);
         jwtTokenizer.deleteRefreshToken(member);

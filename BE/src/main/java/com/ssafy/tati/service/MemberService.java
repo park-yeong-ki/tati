@@ -36,7 +36,7 @@ public class MemberService {
     //회원가입
     public Member createMember(Member member){
         isExistedEmail(member.getEmail());
-        isExistedNickName(member.getMemberNickName());
+//        isExistedNickName(member.getMemberNickName());
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
         Member createdMember = memberRepository.save(member);
@@ -62,7 +62,7 @@ public class MemberService {
 
     //이메일 중복확인
     public void isExistedEmail(String email){
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        Optional<Member> optionalMember = memberRepository.findByEmailAndProvider(email, null);
         if (optionalMember.isPresent()) {
             throw new DuplicateKeyException("중복된 이메일입니다.");
         }
