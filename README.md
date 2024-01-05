@@ -8,7 +8,7 @@
 
 <br>
 
-### 기술 스택
+## :pushpin: 기술 스택
 <div align=left>
 <table>
     <tr>
@@ -58,7 +58,7 @@
 
 <br>
 
-### 설계
+## :pushpin: 설계
 
 #### 요구사항 정의서
 
@@ -78,7 +78,7 @@
 
 <br>
 
-## 주요기능
+## :pushpin: 주요기능
 
 <table>
     <tr> 
@@ -125,6 +125,6 @@
 
 <br>
 
-## 서비스 아키텍처
+## :pushpin: 서비스 아키텍처
 
 <img width="932" src="https://github.com/park-yeong-ki/tati/assets/107581387/0cd1e4a9-6e2e-4fb0-b7ad-9460138b98db">
