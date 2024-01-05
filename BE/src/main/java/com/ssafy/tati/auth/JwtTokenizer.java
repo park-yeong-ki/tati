@@ -124,9 +124,10 @@ public class JwtTokenizer {
     private String delegateAccessToken(Member member) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("memberName", member.getMemberName());
-        claims.put("memberId", member.getMemberId());
+        claims.put("email", member.getEmail());
+        claims.put("role", member.getRole());
 
-        String subject = member.getEmail();
+        String subject = String.valueOf(member.getMemberId());
         Date expiration = getTokenExpiration(accessTokenExpirationMinutes);
         String base64EncodedSecretKey = encodedBase64SecretKey(secretKey);
 
@@ -134,7 +135,7 @@ public class JwtTokenizer {
     }
 
     private String delegateRefreshToken(Member member) {
-        String subject = member.getEmail();
+        String subject = String.valueOf(member.getMemberId());
         Date expiration = getTokenExpiration(refreshTokenExpirationMinutes);
         String base64EncodedSecretKey = encodedBase64SecretKey(secretKey);
 

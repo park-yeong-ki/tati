@@ -36,7 +36,7 @@ public class MemberService {
     //회원가입
     public Member createMember(Member member){
         isExistedEmail(member.getEmail());
-        isExistedNickName(member.getMemberNickName());
+//        isExistedNickName(member.getMemberNickName());
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
         Member createdMember = memberRepository.save(member);
@@ -52,8 +52,8 @@ public class MemberService {
     }
 
     //가입된 회원인지 확인
-    public Member findVerifiedMember(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    public Member findVerifiedMember(String email, String provider) {
+        Optional<Member> optionalMember = memberRepository.findByEmailAndProvider(email, provider);
         if (optionalMember.isPresent()) {
             return optionalMember.get();
         }
@@ -62,7 +62,7 @@ public class MemberService {
 
     //이메일 중복확인
     public void isExistedEmail(String email){
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        Optional<Member> optionalMember = memberRepository.findByEmailAndProvider(email, null);
         if (optionalMember.isPresent()) {
             throw new DuplicateKeyException("중복된 이메일입니다.");
         }
@@ -71,7 +71,7 @@ public class MemberService {
     //비밀번호 확인
     public Member loginMember(Member member) {
         System.out.println("member.getPassword() : " +member.getPassword());
-        Member findMember = findVerifiedMember(member.getEmail());
+        Member findMember = findVerifiedMember(member.getEmail(), null);
         System.out.println("findMember.getPassword() : " +findMember.getPassword());
         if (!passwordEncoder.matches(member.getPassword(), findMember.getPassword())) {
             throw new MismatchDataException("잘못된 비밀번호입니다.");

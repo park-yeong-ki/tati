@@ -1,14 +1,17 @@
 package com.ssafy.tati.config;
 
-import com.ssafy.tati.auth.JwtAuthenticationFilter;
-import com.ssafy.tati.auth.JwtTokenizer;
-import com.ssafy.tati.auth.MemberDetailsService;
+import com.ssafy.tati.auth.*;
+import com.ssafy.tati.auth.filter.JwtAuthenticationFilter;
+import com.ssafy.tati.auth.filter.JwtExceptionFilter;
+import com.ssafy.tati.auth.handler.MyAuthenticationFailureHandler;
+import com.ssafy.tati.auth.handler.MyAuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,8 +26,11 @@ import java.util.Arrays;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtTokenizer jwtTokenizer;
-    private final MemberDetailsService memberDetailsService;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final MyAuthenticationFailureHandler failureHandler;
+    private final MyAuthenticationSuccessHandler successHandler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,18 +40,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .httpBasic().disable()
                 .cors()
                 .and()
                 .csrf().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
                 .antMatchers("/member/sign-up", "/member/nickname-check", "/member/email-check", "/member/email-code-check", "/member/login", "/member/find-password").permitAll()
                 .antMatchers(HttpMethod.GET, "/notice", "/notice/{boardId}", "/faq", "/faq/{boardId}", "/study/list", "/study/search").permitAll()
                 .anyRequest().authenticated()
 //                .anyRequest().permitAll()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenizer, memberDetailsService), UsernamePasswordAuthenticationFilter.class);
+                .oauth2Login()
+                .userInfoEndpoint().userService(customOAuth2UserService)
+                .and()
+                .failureHandler(failureHandler)
+                .successHandler(successHandler);
 
-        return http.build();
+        return http
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
