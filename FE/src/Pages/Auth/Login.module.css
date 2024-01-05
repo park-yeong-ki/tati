@@ -1,4 +1,4 @@
-.Login_box{
+.Login_box {
   /* height: 820px; */
 }
 .login {
@@ -14,31 +14,31 @@
   box-shadow: rgba(0, 0, 0, 0.2) 0px 20px 30px;
   border-radius: 40px;
 }
-.Login_box_find{
+.Login_box_find {
   display: flex;
 }
-.login_title{
+.login_title {
   padding-top: 70px;
 }
 
-.password_find{
+.password_find {
   font-size: 13px;
   padding-left: 200px;
   padding-right: 15px;
   margin-top: 15px;
 }
 
-.signup{
+.signup {
   font-size: 13px;
   margin-top: 15px;
 }
 
-.login_img{
+.login_img {
   width: 1523px;
   height: 650px;
 }
 
-.loginInput{
+.loginInput {
   width: 250px;
   height: 30px;
   margin-top: 20px;
@@ -51,7 +51,7 @@
   border: 1px solid black;
   width: 80px;
   position: absolute;
-  top: 385px; 
+  top: 385px;
   left: 20%;
 }
 
@@ -59,44 +59,44 @@
   border: 1px solid black;
   width: 80px;
   position: absolute;
-  top: 385px; 
+  top: 385px;
   right: 20%;
 }
 
-.loginGoogleLogo{
+.loginGoogleLogo {
   width: 35px;
   position: absolute;
   left: 29%;
-  top: 70%;
+  top: 80%;
 }
 
-.loginKakaoLogo{
+.loginKakaoLogo {
   width: 35px;
   position: absolute;
   left: 47%;
-  top: 70%;
+  top: 80%;
 }
 
-.loginNaverLogo{
+.loginNaverLogo {
   width: 44px;
   position: absolute;
   left: 64%;
-  top: 69.4%;
+  top: 79.4%;
 }
 
-.loginGoogleLogo:hover{
+.loginGoogleLogo:hover {
   transform: scale(1.1);
 }
 
-.loginKakaoLogo:hover{
+.loginKakaoLogo:hover {
   transform: scale(1.1);
 }
 
-.loginNaverLogo:hover{
+.loginNaverLogo:hover {
   transform: scale(1.1);
 }
 
-.loginBtn{
+.loginBtn {
   width: 260px;
   height: 33px;
   margin-bottom: 8px;
@@ -107,4 +107,3 @@
   border-radius: 5px;
   font-size: large;
 }
-
