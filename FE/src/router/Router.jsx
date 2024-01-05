@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 
-import style from "./Router.module.css"
+import style from "./Router.module.css";
 
 // 공지사항
 import Notice from "../Pages/Notice/Notice";
@@ -45,12 +45,10 @@ import MyPagePost from "../Pages/MyPage/Study/MyPagePost";
 import MyPagePoint from "../Pages/MyPage/Point/MyPagePoint";
 import MyPagePointHistory from "../Pages/MyPage/Point/MyPagePointHistory";
 import MyPagePointWithdraw from "../Pages/MyPage/Point/MyPagePointWithdraw";
-import MyPageRewardPoint from "../Pages/MyPage/MyPageRewardPoint"
-
+import MyPageRewardPoint from "../Pages/MyPage/MyPageRewardPoint";
 
 // openvidue
 import Room from "../Pages/Room/Room";
-
 
 // import { aX } from "@fullcalendar/core/internal-common";
 import axios from "axios";
@@ -58,27 +56,23 @@ import NoticeDetail from "../Pages/Notice/NoticeDetail";
 import VideoRoomComponent from "../Pages/Room/VideoRoomComponent";
 // import CustomVideoRoomComponent from './../Pages/Room/CustomVideoRoomComponent';
 
-
 // 리덕스 툴킷
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { persistor } from '../redux/store';
-import { setUser, clearUser } from '../redux/reducers/userSlice';
-import { clearUserSchedule } from '../redux/reducers/userScheduleSlice'
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { persistor } from "../redux/store";
+import { setUser, clearUser } from "../redux/reducers/userSlice";
+import { clearUserSchedule } from "../redux/reducers/userScheduleSlice";
 
 import { clearUserStudySchedule } from "../redux/reducers/userStudyScheduleSlice";
 
-
 import AuthModal from "../Components/MyPage/AuthModal";
-import StudyBoardModify from './../Pages/Study/StudyBoard/StudyBoardModify';
+import StudyBoardModify from "./../Pages/Study/StudyBoard/StudyBoardModify";
 import VideoEnter from "../Pages/Room/VideoEnter";
-import NotFound from './../Pages/NotFound';
-
+import NotFound from "./../Pages/NotFound";
+import LoginSuccess from "../Pages/Auth/LoginSuccess";
 
 export default function Router() {
-
   const dispatch = useDispatch();
-
 
   const [authModal, setAuthModal] = useState(false);
 
@@ -102,27 +96,26 @@ export default function Router() {
     setShowModal(!showModal);
   };
 
-
   // 유저 정보 리덕스에서 가져오기
   const user = useSelector((state) => state.user.user);
-
 
   // 로그아웃
   const handleLogout = () => {
     const accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshtoken");
 
-    axios.get(`${process.env.REACT_APP_URL}/member/logout`, {
-      headers: {
-        "Authorization": `Bearer ${accessToken}`,
-        "RefreshToken": refreshToken
-      }
-    })
+    axios
+      .get(`${process.env.REACT_APP_URL}/member/logout`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          RefreshToken: refreshToken,
+        },
+      })
       .then((res) => {
         console.log(res);
         localStorage.clear();
-        dispatch(clearUserStudySchedule())
-        dispatch(clearUserSchedule())
+        dispatch(clearUserStudySchedule());
+        dispatch(clearUserSchedule());
         dispatch(clearUser());
         // setIsLoggedIn(false);
       })
@@ -131,37 +124,65 @@ export default function Router() {
       });
   };
 
-
-
   return (
     <BrowserRouter>
       <div className={style.navBox}>
         <nav>
-
           <div className={style.logo}>
-            <NavLink to="/Study">타티
+            <NavLink to="/Study">
+              타티
               <img className={style.logo_img} src="/Assets/logo.png" alt="" />
             </NavLink>
           </div>
 
           <div className={style.navBoxIn}>
             {/* openvidu */}
-            <NavLink className={({ isActive }) => style["nav-link"] + (isActive ? " " + style.click : "")} to="/Study">
+            <NavLink
+              className={({ isActive }) => style["nav-link"] + (isActive ? " " + style.click : "")}
+              to="/Study"
+            >
               스터디
             </NavLink>
-            <NavLink className={({ isActive }) => style["nav-link"] + (isActive ? " " + style.click : "")} to="/Notice">
+            <NavLink
+              className={({ isActive }) => style["nav-link"] + (isActive ? " " + style.click : "")}
+              to="/Notice"
+            >
               공지사항
             </NavLink>
-            <NavLink className={({ isActive }) => style["nav-link"] + (isActive ? " " + style.click : "")} to="/Faq">
+            <NavLink
+              className={({ isActive }) => style["nav-link"] + (isActive ? " " + style.click : "")}
+              to="/Faq"
+            >
               FAQ
             </NavLink>
-            {user && (<NavLink className={({ isActive }) => style["nav-link"] + (isActive ? " " + style.click : "")} to="/MyPage" >
-              마이페이지
-            </NavLink>)}
-            {user && (<NavLink className={({ isActive }) => style["nav-link"] + (isActive ? " " + style.click : "")}
-              to="/Login" onClick={handleLogout}>로그아웃</NavLink>)}
+            {user && (
+              <NavLink
+                className={({ isActive }) =>
+                  style["nav-link"] + (isActive ? " " + style.click : "")
+                }
+                to="/MyPage"
+              >
+                마이페이지
+              </NavLink>
+            )}
+            {user && (
+              <NavLink
+                className={({ isActive }) =>
+                  style["nav-link"] + (isActive ? " " + style.click : "")
+                }
+                to="/Login"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </NavLink>
+            )}
             {!user && (
-              <NavLink className={({ isActive }) => style["nav-link"] + (isActive ? " " + style.click : "")} to="/Login">
+              <NavLink
+                className={({ isActive }) =>
+                  style["nav-link"] + (isActive ? " " + style.click : "")
+                }
+                to="/Login"
+              >
                 로그인
               </NavLink>
             )}
@@ -169,26 +190,26 @@ export default function Router() {
         </nav>
         <hr className={style.nav_hr} />
 
-
         {/* 회원정보수정페이지로 가는 모달 */}
         <div>
-          {authModal &&
+          {authModal && (
             <div className={style.modal_backdrop}>
-              <AuthModal setAuthModal={setAuthModal} onButtonClick={handleButtonClick} closeModal={closeModal} />
+              <AuthModal
+                setAuthModal={setAuthModal}
+                onButtonClick={handleButtonClick}
+                closeModal={closeModal}
+              />
             </div>
-          }
+          )}
         </div>
-
       </div>
 
       <Routes>
-
         <Route path="/" element={<Main />} />
 
         {/* openvidu */}
         <Route path="/Room" element={<Room />} />
         <Route path="/VideoEnter" element={<VideoEnter />} />
-
 
         {/* 공지사항 */}
         <Route path="/Notice" element={<Notice />}>
@@ -208,8 +229,8 @@ export default function Router() {
         {/* Auth (회원가입 로그인 로그아웃) */}
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/LoginSuccess" element={<LoginSuccess />}></Route>
         <Route path="/Logout" element={<Login />} />
-
 
         <Route path="/payment/success" element={<KakaoPay />} />
 
@@ -228,7 +249,7 @@ export default function Router() {
         <Route path="/Study" element={<Study />}>
           <Route path="" element={<StudyList />} />
           <Route path="Create" element={<StudyCreate />} />
-          <Route path=":studyId" element={<StudyDetail />} >
+          <Route path=":studyId" element={<StudyDetail />}>
             <Route path="" element={<StudyDetailInfo />} />
             <Route path="Modify" element={<StudyModify />} />
 
@@ -251,7 +272,6 @@ export default function Router() {
         </Route>
         {/* 주소 없을시 */}
         <Route path="*" element={<NotFound />} />
-
       </Routes>
     </BrowserRouter>
   );

@@ -1,28 +1,24 @@
 import React, { useState } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
-import style from "./SignUp.module.css"
+import style from "./SignUp.module.css";
 //로딩중
 import Loading from "../../Loading/Loading";
 import Tooltip from "../../Components/Common/Tooltip";
 
 export default function SignUp() {
-
   const navigate = useNavigate();
 
-
-  const [formData, setFormData] = useState(
-    {
-      email: "",
-      code: "",
-      memberNickName: "",
-      memberName: "",
-      password: "",
-      password2: "",
-    }
-  );
+  const [formData, setFormData] = useState({
+    email: "",
+    code: "",
+    memberNickName: "",
+    memberName: "",
+    password: "",
+    password2: "",
+  });
 
   // 로딩중 스피너
   const [loadingError, setLoadingError] = useState(false);
@@ -52,27 +48,24 @@ export default function SignUp() {
       })
       .then((res) => {
         console.log(res);
-        alert('인증 메일이 발송되었습니다.')
+        alert("인증 메일이 발송되었습니다.");
       })
       .catch((err) => {
         console.log(err);
-        alert('이메일을 다시 입력해주세요.')
+        alert("이메일을 다시 입력해주세요.");
       })
       .finally(() => {
         setLoadingError(false);
       });
-
   };
-
 
   // 이메일 인증번호
   const handleSendNumber = () => {
-
     setLoadingError(true);
     axios
       .post(`${process.env.REACT_APP_URL}/member/email-code-check`, {
         email: formData.email,
-        code: formData.code
+        code: formData.code,
       })
       .then((res) => {
         console.log(res);
@@ -87,33 +80,30 @@ export default function SignUp() {
       });
   };
 
-
   // 닉네임 중복 확인
   const handleSendNickName = () => {
-    console.log(formData.memberNickName)
+    console.log(formData.memberNickName);
     setLoadingError(true);
     if (formData.memberNickName.length < 2 || formData.memberNickName.length > 10) {
       alert("2~10자 이내로 지어주세요.");
-    } else{
-
+    } else {
       axios
-      .post(`${process.env.REACT_APP_URL}/member/nickname-check`, {
-        memberNickName: formData.memberNickName,
-      })
-      .then((res) => {
-        console.log(res)
-        alert("중복체크성공");
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("중복체크실패");
-      })
-      .finally(() => {
-        setLoadingError(false);
-      });
+        .post(`${process.env.REACT_APP_URL}/member/nickname-check`, {
+          memberNickName: formData.memberNickName,
+        })
+        .then((res) => {
+          console.log(res);
+          alert("중복체크성공");
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("중복체크실패");
+        })
+        .finally(() => {
+          setLoadingError(false);
+        });
     }
   };
-
 
   // 회원가입
   const handleSignUp = () => {
@@ -141,7 +131,7 @@ export default function SignUp() {
     } else if (password !== password2) {
       alert("비밀번호가 서로 다릅니다.");
       setLoadingError(false);
-    }else{
+    } else {
       axios
         .post(`${process.env.REACT_APP_URL}/member/sign-up`, {
           email,
@@ -151,7 +141,7 @@ export default function SignUp() {
         })
         .then((res) => {
           console.log(res);
-          navigate('/Login')
+          navigate("/Login");
         })
         .catch((err) => {
           console.log(err);
@@ -160,7 +150,6 @@ export default function SignUp() {
           setLoadingError(false);
         });
     }
-
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -171,7 +160,7 @@ export default function SignUp() {
   return (
     <div className={style.SignUp_box}>
       <img className={style.img01} src="./Assets/signup02.jpg" alt="" />
-      
+
       <div className={`${style.signup}`}>
         <h1 className={style.signup_title}>회원가입</h1>
 
@@ -197,7 +186,12 @@ export default function SignUp() {
             value={formData.code}
             onChange={handleChange}
           />
-          <input className={style.btn_check} type="button" value="인증" onClick={handleSendNumber} />
+          <input
+            className={style.btn_check}
+            type="button"
+            value="인증"
+            onClick={handleSendNumber}
+          />
         </p>
 
         <p className={style.signup_text}>
@@ -213,12 +207,12 @@ export default function SignUp() {
               onMouseEnter={() => setShowNickNameHint(true)}
               onMouseLeave={() => setShowNickNameHint(false)}
             />
-            <input
+            {/* <input
               className={style.btn_check}
               type="button"
               value="중복확인"
               onClick={handleSendNickName}
-            />
+            /> */}
             {showNickNameHint && (
               <div className={style.tooltip_content}>
                 <p>2~10자 이내</p>
@@ -253,7 +247,6 @@ export default function SignUp() {
           </div>
         </p>
 
-
         <p className={`${style.signup_text} ${style.password}`}>
           비밀번호확인
           <input
@@ -265,26 +258,20 @@ export default function SignUp() {
             onChange={handleChange}
           />
         </p>
-        <button
-          className={style.signup_btn}
-          type="button" onClick={handleSignUp}>
+        <button className={style.signup_btn} type="button" onClick={handleSignUp}>
           회원가입완료
         </button>
-        <button
-          className={style.cancel_btn}
-          onClick={handleCancel}
-        >
+        <button className={style.cancel_btn} onClick={handleCancel}>
           취소
         </button>
-      </div >
-
+      </div>
 
       {/* 로딩 모달 */}
       {loadingError && (
-          <div className={`${style.modal}`}>
-            <Loading />
-          </div>
-        )}
-    </div >
+        <div className={`${style.modal}`}>
+          <Loading />
+        </div>
+      )}
+    </div>
   );
 }
