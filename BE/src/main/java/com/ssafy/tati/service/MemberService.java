@@ -52,8 +52,8 @@ public class MemberService {
     }
 
     //가입된 회원인지 확인
-    public Member findVerifiedMember(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    public Member findVerifiedMember(String email, String provider) {
+        Optional<Member> optionalMember = memberRepository.findByEmailAndProvider(email, provider);
         if (optionalMember.isPresent()) {
             return optionalMember.get();
         }
@@ -71,7 +71,7 @@ public class MemberService {
     //비밀번호 확인
     public Member loginMember(Member member) {
         System.out.println("member.getPassword() : " +member.getPassword());
-        Member findMember = findVerifiedMember(member.getEmail());
+        Member findMember = findVerifiedMember(member.getEmail(), null);
         System.out.println("findMember.getPassword() : " +findMember.getPassword());
         if (!passwordEncoder.matches(member.getPassword(), findMember.getPassword())) {
             throw new MismatchDataException("잘못된 비밀번호입니다.");

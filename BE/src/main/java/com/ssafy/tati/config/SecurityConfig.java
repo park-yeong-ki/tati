@@ -23,7 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -48,7 +48,6 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login/*").permitAll()
                 .antMatchers("/member/sign-up", "/member/nickname-check", "/member/email-check", "/member/email-code-check", "/member/login", "/member/find-password").permitAll()
                 .antMatchers(HttpMethod.GET, "/notice", "/notice/{boardId}", "/faq", "/faq/{boardId}", "/study/list", "/study/search").permitAll()
                 .anyRequest().authenticated()

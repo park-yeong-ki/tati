@@ -5,6 +5,7 @@ import com.ssafy.tati.auth.Token;
 import com.ssafy.tati.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -23,6 +24,9 @@ import java.nio.charset.StandardCharsets;
 public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenizer jwtTokenizer;
+
+    @Value("${url.frontend}")
+    private String frontend;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -58,7 +62,7 @@ public class MyAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucce
         log.info("accessToken = {}, refreshToken = {}", token.getAccessToken(), token.getRefreshToken());
 
         // accessToken, refreshToken을 쿼리스트링에 담는 url을 만들어준다.
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/loginSuccess")
+        String targetUrl = UriComponentsBuilder.fromUriString(frontend + "/LoginSuccess")
                 .queryParam("accessToken", token.getAccessToken())
                 .queryParam("refreshToken", token.getRefreshToken())
                 .build()

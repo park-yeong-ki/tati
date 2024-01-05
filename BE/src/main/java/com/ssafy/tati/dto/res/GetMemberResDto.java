@@ -37,6 +37,12 @@ public class GetMemberResDto {
     @Schema(description = "총 공부시간")
     private Integer totalStudyTime;
 
-    @Schema(description = "회원가입일")
+    @Schema(description = "회원가입 일시")
     private LocalDateTime createdDate;
+
+    @Schema(description = "소셜로그인 출처")
+    private String provider;
+
+    @Schema(description = "프로필 이미지")
+    private String img;
 }

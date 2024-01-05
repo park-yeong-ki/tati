@@ -130,7 +130,7 @@ public class MemberController {
     @Operation(summary = "비밀번호 찾기", description = "이메일을 입력하면 가입된 회원인지 확인하여 비밀번호 초기화 후 해당 이메일로 비밀번호 전송")
     @PostMapping("/find-password")
     public ResponseEntity<?> findPassword(@RequestBody EmailReqDto emailReqDto) throws MessagingException, UnsupportedEncodingException {
-        Member member = memberService.findVerifiedMember(emailReqDto.getEmail());
+        Member member = memberService.findVerifiedMember(emailReqDto.getEmail(), null);
         String password = emailService.sendPasswordMail(emailReqDto.getEmail());
         memberService.passwordChange(member, password);
 
